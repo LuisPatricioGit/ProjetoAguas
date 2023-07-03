@@ -15,7 +15,7 @@ namespace CompanhiaAguas.Data.Entities
         public double Value { get; set; }
         public int Model { get; set; }
 
-        public Status Status { get; set; }
+        public Status MeterStatus { get; set; }
 
         public List<SupplyPoint> SupplyPoints { get; set; } 
     }
