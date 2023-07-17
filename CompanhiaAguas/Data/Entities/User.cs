@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
+using System.Xml.Linq;
 
 namespace CompanhiaAguas.Data.Entities
 {
@@ -21,6 +23,9 @@ namespace CompanhiaAguas.Data.Entities
         public string ProfilePicUrl { get; set;}
         
         public AccountStatus Status { get; set; }
+
+        [Display(Name = "Full Name")]
+        public string FullName => $"{FirstName} {LastName}";
 
     }
 }

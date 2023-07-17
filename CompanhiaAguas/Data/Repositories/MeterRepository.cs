@@ -2,10 +2,10 @@
 
 namespace CompanhiaAguas.Data.Repositories
 {
-    public class ContractTypeRepository : GenericRepository<ContractType>, IContractTypeRepository
+    public class MeterRepository : GenericRepository<Meter>, IMeterRepository
     {
         private readonly DataContext _context;
-        public ContractTypeRepository(DataContext context) : base(context)
+        public MeterRepository(DataContext context) : base(context)
         {
             _context = context;
         }
