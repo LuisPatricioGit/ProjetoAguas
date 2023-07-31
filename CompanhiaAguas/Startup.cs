@@ -1,5 +1,6 @@
 using CompanhiaAguas.Data;
 using CompanhiaAguas.Data.Entities;
+using CompanhiaAguas.Data.Repositories;
 using CompanhiaAguas.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -32,16 +33,31 @@ namespace CompanhiaAguas
                 cfg.Password.RequireUppercase = false;
                 cfg.Password.RequireNonAlphanumeric = false;
                 cfg.Password.RequiredLength = 6;
+
             }).AddEntityFrameworkStores<DataContext>();
 
             services.AddDbContext<DataContext>(cfg =>
             {
-                cfg.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection"));
+                cfg.UseSqlServer(this.Configuration.GetConnectionString("LocalConnection"));
             });
 
             services.AddTransient<SeedDb>();
             services.AddScoped<IUserHelper, UserHelper>();
 
+            //Repositories
+            services.AddScoped<IConsumptionTableRepository, ConsumptionTableRepository>();
+            services.AddScoped<IContractRepository, ContractRepository>();
+            services.AddScoped<IContractTypeRepository, ContractTypeRepository>();
+            services.AddScoped<IInvoiceRepository, InvoiceRepository>();
+            services.AddScoped<IMeterRepository, MeterRepository>();
+            services.AddScoped<ISupplyPointRepository, SupplyPointRepository>();
+            services.AddScoped<ITierRepository, TierRepository>();
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Account/NotAuthorized";
+                options.AccessDeniedPath = "/Account/NotAuthorized";
+            });
 
             services.AddControllersWithViews();
         }
@@ -55,10 +71,13 @@ namespace CompanhiaAguas
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Errors/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseStatusCodePagesWithReExecute("/error/{0}");
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
