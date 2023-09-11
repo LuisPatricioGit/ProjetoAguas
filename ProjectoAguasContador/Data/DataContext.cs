@@ -7,10 +7,12 @@ namespace ProjectoAguasContador.Data
 {
     public class DataContext : IdentityDbContext<User>
     {
+        public DbSet<User> Users { get; set; }
 
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
         }
+
 
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{

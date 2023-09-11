@@ -61,6 +61,11 @@ namespace ProjectoAguasContador.Helpers
             return await _userManager.IsInRoleAsync(user, roleName);
         }
 
+        public bool IsUserInRole(User user, string roleName)
+        {
+            return _userManager.IsInRoleAsync(user, roleName).Result;
+        }
+
         public async Task<SignInResult> LoginAsync(LoginViewModel model)
         {
             return await _signInManager.PasswordSignInAsync(

@@ -27,6 +27,8 @@ namespace ProjectoAguasContador.Helpers
 
         Task<bool> IsUserInRoleAsync(User user, string roleName);
 
+        bool IsUserInRole(User user, string roleName);
+
         Task<SignInResult> ValidatePasswordAsync(User user, string password);
     }
 }

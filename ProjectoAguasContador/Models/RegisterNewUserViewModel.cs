@@ -21,6 +21,7 @@ namespace ProjectoAguasContador.Models
         [MaxLength(100, ErrorMessage = "The Field {0} only can contain {1} characters lenght.")]
         public string Address { get; set; }
 
+        [Display(Name = "Phone Number")]
         [MaxLength(20, ErrorMessage = "The Field {0} only can contain {1} characters lenght.")]
         public string PhoneNumber { get; set; }
 
