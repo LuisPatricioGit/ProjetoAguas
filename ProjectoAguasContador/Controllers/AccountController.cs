@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Razor.Language.Intermediate;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using ProjectoAguasContador.Data;
 using ProjectoAguasContador.Data.Entities;
 using ProjectoAguasContador.Helpers;
 using ProjectoAguasContador.Models;
@@ -18,11 +18,13 @@ namespace ProjectoAguasContador.Controllers
     public class AccountController : Controller
     {
         private readonly IUserHelper _userHelper;
+        private readonly IMailHelper _mailHelper;
         private readonly IConfiguration _configuration;
 
-        public AccountController(IUserHelper userHelper, IConfiguration configuration)
+        public AccountController(IUserHelper userHelper, IMailHelper mailHelper, IConfiguration configuration)
         {
             _userHelper = userHelper;
+            _mailHelper = mailHelper;
             _configuration = configuration;
         }
 
@@ -49,7 +51,7 @@ namespace ProjectoAguasContador.Controllers
             if (!user.AdminApproved)
             {
                 this.ModelState.AddModelError(string.Empty, "Failed to Login: Account awaitting approval");
-            } 
+            }
             else
             {
                 if (ModelState.IsValid)
@@ -113,7 +115,17 @@ namespace ProjectoAguasContador.Controllers
                         return View(model);
                     }
                     await _userHelper.AddUserToRoleAsync(user, "Customer");
-                    ModelState.AddModelError(string.Empty, "Register Successfull, Approval pending... Please Check your Email for more information");
+                    ModelState.AddModelError(string.Empty, "Register Successfull, Approval pending... Generating Email with information");
+
+                    Response response = _mailHelper.SendEmail(model.Username, "Email Confirmation",
+                         $"<h1>Email Confirmation</h1>" +
+                         $"You've Registered for Water Company, please await while an employee comfirms ur data and the admin accepts the information. ");
+
+                    if (response.IsSuccess)
+                    {
+                        ViewBag.Message = "A confirmation email has been sent, please verify your inbox for more information";
+                        return View(model);
+                    }
                 }
             }
             return View(model);
