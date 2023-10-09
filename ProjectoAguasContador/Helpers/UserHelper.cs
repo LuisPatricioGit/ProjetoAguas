@@ -92,5 +92,15 @@ namespace ProjectoAguasContador.Helpers
                 password,
                 false);
         }
+
+        public async Task<User> GetUserByIdAsync(string id)
+        {
+            return await _userManager.FindByIdAsync(id);
+        }
+
+        public async Task<IdentityResult> DeleteUserAsync(User user)
+        {
+            return await _userManager.DeleteAsync(user);
+        }
     }
 }

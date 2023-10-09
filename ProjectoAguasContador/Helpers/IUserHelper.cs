@@ -9,9 +9,13 @@ namespace ProjectoAguasContador.Helpers
     {
         Task<User> GetUserByEmailAsync(string email);
 
+        Task<User> GetUserByIdAsync(string id);
+
         Task<IdentityResult> AddUserNoPassAsync(User user);
 
         Task<IdentityResult> AddUserAsync(User user, string password);
+
+        Task<IdentityResult> DeleteUserAsync(User user);
 
         Task<SignInResult> LoginAsync(LoginViewModel model);
 
@@ -30,5 +34,7 @@ namespace ProjectoAguasContador.Helpers
         bool IsUserInRole(User user, string roleName);
 
         Task<SignInResult> ValidatePasswordAsync(User user, string password);
+
+
     }
 }

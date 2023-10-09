@@ -5,10 +5,9 @@ using ProjectoAguasContador.Data.Entities;
 using ProjectoAguasContador.Helpers;
 using ProjectoAguasContador.Models;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
-namespace ProjectoAguasContador.Controllers
+namespace Odimar.Controllers
 {
     public class HomeController : Controller
     {
@@ -54,12 +53,11 @@ namespace ProjectoAguasContador.Controllers
                     {
                         dashboard.AdminDashboard.Customers.Add(user);
                     }
-                    
+
                     if (!user.AdminApproved && await _userHelper.IsUserInRoleAsync(user, "Employee"))
                     {
                         dashboard.AdminDashboard.Employees.Add(user);
                     }
-
                 }
             }
             else if (User.IsInRole("Employee"))
@@ -76,12 +74,10 @@ namespace ProjectoAguasContador.Controllers
                 }
 
             }
-            else if (User.IsInRole("Customer"))
+            else if (User.IsInRole("Client"))
             {
 
             }
-
-
             return View(dashboard);
         }
 

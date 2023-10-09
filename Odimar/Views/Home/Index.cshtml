@@ -1,0 +1,35 @@
+﻿@model Odimar.Models.LoginViewModel
+
+@{
+	Layout = "~/Views/Shared/_LayoutHome.cshtml";
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="container middle-section">
+    <div class="row">
+        <div class="col-md-7">
+            <img src="~/images/home/odimarLogoText.png" alt="Login Image" class="login-image img-fluid"/>
+        </div>
+        <div class="col-md-5 login-section">
+
+            <div class="form-group">
+                <div class="col-md-12">
+                    <h2>Welcome to Odimar</h2>
+                    <br />
+                    <p>Your National Water Distribution and Treatment Service. <br /> Login or Register down below to get started.</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-12">
+                    <a class="btn btn-primary btn-block btn-spacing" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
+                </div>
+                <div class="col-md-12">
+                    <a class="btn btn-primary btn-block btn-spacing" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

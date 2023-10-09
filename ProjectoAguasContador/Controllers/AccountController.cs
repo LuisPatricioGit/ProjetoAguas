@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using ProjectoAguasContador.Data.Entities;
@@ -115,15 +117,15 @@ namespace ProjectoAguasContador.Controllers
                         return View(model);
                     }
                     await _userHelper.AddUserToRoleAsync(user, "Customer");
-                    ModelState.AddModelError(string.Empty, "Register Successfull, Approval pending... Generating Email with information");
 
                     Response response = _mailHelper.SendEmail(model.Username, "Email Confirmation",
                          $"<h1>Email Confirmation</h1>" +
-                         $"You've Registered for Water Company, please await while an employee comfirms ur data and the admin accepts the information. ");
+                         $"You've Registered for Odimar, please wait while an employee comfirms your data and the admin accepts the information.<br></br>" +
+                         $"You will recieve an email when the comfirmation process has been completed.");
 
                     if (response.IsSuccess)
                     {
-                        ViewBag.Message = "A confirmation email has been sent, please verify your inbox for more information";
+                        ViewBag.Message = "Register Successfull, Approval pending... please verify your inbox for more information";
                         return View(model);
                     }
                 }
@@ -250,5 +252,74 @@ namespace ProjectoAguasContador.Controllers
             return BadRequest();
         }
 
+
+        [HttpPost]
+        [Authorize(Roles = "Admin,Employee")]
+        public async Task<IActionResult> Create(string? id)
+        {
+            if (id == null)
+            {
+                return new NotFoundViewResult("AccountNotFound");
+            }
+            var user = await _userHelper.GetUserByIdAsync(id);
+
+
+
+            await _userHelper.UpdateUserAsync(user);
+            return RedirectToAction(nameof(Index));
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Details(string? id)
+        {
+            if (id == null)
+            {
+                return new NotFoundViewResult("AccountNotFound");
+            }
+
+            var account = await _userHelper.GetUserByIdAsync(id);
+            if (account == null)
+            {
+                return new NotFoundViewResult("AccountNotFound");
+            }
+
+            return View(account);
+        }
+
+        // POST: Accounts/Delete/5
+        [Authorize(Roles = "Admin,Employee")]
+        public async Task<IActionResult> Delete(string? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var user = await _userHelper.GetUserByIdAsync(id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                //throw new Exception("Excepção de Teste");
+                await _userHelper.DeleteUserAsync(user);
+                return RedirectToAction("Dashboard", "Home");
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException != null && ex.InnerException.Message.Contains("DELETE"))
+                {
+                    ViewBag.ErrorTitle = $"{user.FullName} provavelmente está a ser usado!!";
+                    ViewBag.ErrorMessage = $"{user.FullName} não pode ser apagado visto a haverem contadores que o usam. </br></br>" +
+                        $"Experimente primeiro apagar todos os contadores que o estão a usar," +
+                        $"e torne novamente a apagá-lo";
+                }
+
+                return View("Error");
+            }
+        }
     }
 }

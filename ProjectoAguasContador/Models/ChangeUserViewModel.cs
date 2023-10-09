@@ -7,6 +7,9 @@ namespace ProjectoAguasContador.Models
     public class ChangeUserViewModel
     {
         [Required]
+        public string Id { get; set; }
+
+        [Required]
         [Display(Name = "First Name")]
         public string FirstName { get; set; }
 
@@ -31,5 +34,18 @@ namespace ProjectoAguasContador.Models
         public int CountryId { get; set; }
 
         public IEnumerable<SelectListItem> Countries { get; set; }
+
+        [Required]
+        [Display(Name = "Employee Verified")]
+        public bool EmployeeApproved { get; set; }
+
+        [Required]
+        [Display(Name = "Admin Verified")]
+        public bool AdminApproved { get; set; }
+
+        [Required]
+        [DataType(DataType.Password)]
+        [Display(Name = "Password")]
+        public string Password { get; set; }
     }
 }
